@@ -10,6 +10,15 @@
     <string name="register_button">Registrarme</string>
     <string name="go_to_register">No tengo cuenta, registrarme</string>
     <string name="go_to_login">Ya tengo cuenta, iniciar sesion</string>
-    <string name="session_active_title">Sesion activa</string>
+    <string name="welcome_title">Bienvenido al Quiz DSM</string>
+    <string name="quiz_instructions">Elige una categoría y dificultad. El quiz tendrá 5 preguntas de opción múltiple; selecciona una respuesta en cada pregunta antes de enviarlo.</string>
+    <string name="category_label">1. Elige el tipo de quiz</string>
+    <string name="category_general_knowledge">Cultura general</string>
+    <string name="category_science">Ciencia</string>
+    <string name="category_sports">Deportes</string>
+    <string name="category_history">Historia</string>
+    <string name="difficulty_label">2. Selecciona la dificultad</string>
+    <string name="difficulty_easy">Fácil</string>
+    <string name="difficulty_hard">Difícil</string>
     <string name="logout_button">Cerrar sesion</string>
 </resources>

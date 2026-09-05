@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.button.MaterialButtonToggleGroup
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
@@ -29,6 +30,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var authActionButton: MaterialButton
     private lateinit var switchModeButton: MaterialButton
     private lateinit var logoutButton: MaterialButton
+    private lateinit var categoryToggleGroup: MaterialButtonToggleGroup
+    private lateinit var categorySecondRowToggleGroup: MaterialButtonToggleGroup
     private var isRegisterMode = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,6 +64,8 @@ class MainActivity : AppCompatActivity() {
         authActionButton = findViewById(R.id.authActionButton)
         switchModeButton = findViewById(R.id.switchModeButton)
         logoutButton = findViewById(R.id.logoutButton)
+        categoryToggleGroup = findViewById(R.id.categoryToggleGroup)
+        categorySecondRowToggleGroup = findViewById(R.id.categorySecondRowToggleGroup)
     }
 
     private fun configureActions() {
@@ -78,6 +83,18 @@ class MainActivity : AppCompatActivity() {
             auth.signOut()
             Toast.makeText(this, "Sesion cerrada correctamente.", Toast.LENGTH_SHORT).show()
             updateSessionState()
+        }
+
+        categoryToggleGroup.addOnButtonCheckedListener { _, _, isChecked ->
+            if (isChecked) {
+                categorySecondRowToggleGroup.clearChecked()
+            }
+        }
+
+        categorySecondRowToggleGroup.addOnButtonCheckedListener { _, _, isChecked ->
+            if (isChecked) {
+                categoryToggleGroup.clearChecked()
+            }
         }
     }
 

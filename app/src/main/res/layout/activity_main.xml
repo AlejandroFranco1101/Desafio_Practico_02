@@ -91,7 +91,6 @@
             android:id="@+id/sessionContainer"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
             android:orientation="vertical"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -103,8 +102,7 @@
                 android:id="@+id/sessionTitleText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/session_active_title"
+                android:text="@string/welcome_title"
                 android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
                 android:textStyle="bold" />
 
@@ -113,15 +111,116 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:gravity="center"
                 android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
                 tools:text="usuario@correo.com" />
+
+            <TextView
+                android:id="@+id/quizInstructionsText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/quiz_instructions"
+                android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/category_label"
+                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                android:textStyle="bold" />
+
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/categoryToggleGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:checkedButton="@id/generalKnowledgeButton"
+                app:singleSelection="true">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/generalKnowledgeButton"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/category_general_knowledge" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/scienceButton"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/category_science" />
+
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/categorySecondRowToggleGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:singleSelection="true">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/sportsButton"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/category_sports" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/historyButton"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/category_history" />
+
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/difficulty_label"
+                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                android:textStyle="bold" />
+
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/difficultyToggleGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:checkedButton="@id/easyDifficultyButton"
+                app:selectionRequired="true"
+                app:singleSelection="true">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/easyDifficultyButton"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/difficulty_easy" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/hardDifficultyButton"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/difficulty_hard" />
+
+            </com.google.android.material.button.MaterialButtonToggleGroup>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/logoutButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="32dp"
                 android:text="@string/logout_button" />
 
         </LinearLayout>
