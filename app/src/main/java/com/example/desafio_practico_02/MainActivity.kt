@@ -34,7 +34,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var logoutButton: MaterialButton
     private lateinit var startQuizButton: MaterialButton
     private lateinit var categoryToggleGroup: MaterialButtonToggleGroup
-    private lateinit var categorySecondRowToggleGroup: MaterialButtonToggleGroup
     private lateinit var difficultyToggleGroup: MaterialButtonToggleGroup
     private lateinit var quizContainer: LinearLayout
     private lateinit var quizTitleText: TextView
@@ -87,7 +86,6 @@ class MainActivity : AppCompatActivity() {
         logoutButton = findViewById(R.id.logoutButton)
         startQuizButton = findViewById(R.id.startQuizButton)
         categoryToggleGroup = findViewById(R.id.categoryToggleGroup)
-        categorySecondRowToggleGroup = findViewById(R.id.categorySecondRowToggleGroup)
         difficultyToggleGroup = findViewById(R.id.difficultyToggleGroup)
         quizContainer = findViewById(R.id.quizContainer)
         quizTitleText = findViewById(R.id.quizTitleText)
@@ -118,18 +116,6 @@ class MainActivity : AppCompatActivity() {
             auth.signOut()
             Toast.makeText(this, "Sesion cerrada correctamente.", Toast.LENGTH_SHORT).show()
             updateSessionState()
-        }
-
-        categoryToggleGroup.addOnButtonCheckedListener { _, _, isChecked ->
-            if (isChecked) {
-                categorySecondRowToggleGroup.clearChecked()
-            }
-        }
-
-        categorySecondRowToggleGroup.addOnButtonCheckedListener { _, _, isChecked ->
-            if (isChecked) {
-                categoryToggleGroup.clearChecked()
-            }
         }
 
         startQuizButton.setOnClickListener {
@@ -271,15 +257,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getSelectedCategory(): String? {
-        return when {
-            categoryToggleGroup.checkedButtonId != View.NO_ID -> {
-                findViewById<MaterialButton>(categoryToggleGroup.checkedButtonId).text.toString()
-            }
-            categorySecondRowToggleGroup.checkedButtonId != View.NO_ID -> {
-                findViewById<MaterialButton>(categorySecondRowToggleGroup.checkedButtonId).text.toString()
-            }
-            else -> null
-        }
+        val selectedId = categoryToggleGroup.checkedButtonId
+        return if (selectedId == View.NO_ID) null else findViewById<MaterialButton>(selectedId).text.toString()
     }
 
     private fun getSelectedDifficulty(): String {
