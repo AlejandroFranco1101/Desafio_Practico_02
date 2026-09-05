@@ -21,5 +21,8 @@
     <string name="difficulty_easy">Fácil</string>
     <string name="difficulty_hard">Difícil</string>
     <string name="start_quiz_button">Iniciar quiz</string>
+    <string name="quiz_answer_all">Responde todas las preguntas antes de enviar el quiz.</string>
+    <string name="submit_quiz_button">Enviar quiz</string>
+    <string name="reset_quiz_button">Reiniciar quiz</string>
     <string name="logout_button">Cerrar sesion</string>
 </resources>

@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.util.Patterns
 import android.view.View
 import android.widget.LinearLayout
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -34,7 +36,16 @@ class MainActivity : AppCompatActivity() {
     private lateinit var categoryToggleGroup: MaterialButtonToggleGroup
     private lateinit var categorySecondRowToggleGroup: MaterialButtonToggleGroup
     private lateinit var difficultyToggleGroup: MaterialButtonToggleGroup
+    private lateinit var quizContainer: LinearLayout
+    private lateinit var quizTitleText: TextView
+    private lateinit var questionsContainer: LinearLayout
+    private lateinit var submitQuizButton: MaterialButton
+    private lateinit var resetQuizButton: MaterialButton
     private var isRegisterMode = false
+    private var selectedCategory = ""
+    private var selectedDifficulty = ""
+    private var currentQuestions = emptyList<QuizQuestion>()
+    private val answerGroups = mutableListOf<RadioGroup>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,6 +81,11 @@ class MainActivity : AppCompatActivity() {
         categoryToggleGroup = findViewById(R.id.categoryToggleGroup)
         categorySecondRowToggleGroup = findViewById(R.id.categorySecondRowToggleGroup)
         difficultyToggleGroup = findViewById(R.id.difficultyToggleGroup)
+        quizContainer = findViewById(R.id.quizContainer)
+        quizTitleText = findViewById(R.id.quizTitleText)
+        questionsContainer = findViewById(R.id.questionsContainer)
+        submitQuizButton = findViewById(R.id.submitQuizButton)
+        resetQuizButton = findViewById(R.id.resetQuizButton)
     }
 
     private fun configureActions() {
@@ -103,6 +119,14 @@ class MainActivity : AppCompatActivity() {
 
         startQuizButton.setOnClickListener {
             startSelectedQuiz()
+        }
+
+        submitQuizButton.setOnClickListener {
+            submitQuiz()
+        }
+
+        resetQuizButton.setOnClickListener {
+            resetQuiz()
         }
     }
 
@@ -184,10 +208,12 @@ class MainActivity : AppCompatActivity() {
         if (currentUser == null) {
             authContainer.visibility = View.VISIBLE
             sessionContainer.visibility = View.GONE
+            quizContainer.visibility = View.GONE
             updateAuthMode()
         } else {
             authContainer.visibility = View.GONE
             sessionContainer.visibility = View.VISIBLE
+            quizContainer.visibility = View.GONE
             sessionEmailText.text = currentUser.email ?: "Usuario autenticado"
         }
     }
@@ -213,7 +239,10 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        Toast.makeText(this, "Quiz de $category en dificultad $difficulty.", Toast.LENGTH_SHORT).show()
+        selectedCategory = category
+        selectedDifficulty = difficulty
+        currentQuestions = getQuestions(category, difficulty)
+        showQuiz()
     }
 
     private fun getSelectedCategory(): String? {
@@ -231,4 +260,153 @@ class MainActivity : AppCompatActivity() {
     private fun getSelectedDifficulty(): String {
         return findViewById<MaterialButton>(difficultyToggleGroup.checkedButtonId).text.toString()
     }
+
+    private fun showQuiz() {
+        sessionContainer.visibility = View.GONE
+        quizContainer.visibility = View.VISIBLE
+        quizTitleText.text = "$selectedCategory - $selectedDifficulty"
+        renderQuestions()
+    }
+
+    private fun renderQuestions() {
+        questionsContainer.removeAllViews()
+        answerGroups.clear()
+
+        currentQuestions.forEachIndexed { index, question ->
+            val questionText = TextView(this).apply {
+                text = "${index + 1}. ${question.text}"
+                setTextAppearance(android.R.style.TextAppearance_Material_Medium)
+                setPadding(0, 18, 0, 8)
+            }
+            questionsContainer.addView(questionText)
+
+            val radioGroup = RadioGroup(this).apply {
+                orientation = RadioGroup.VERTICAL
+            }
+
+            question.options.forEachIndexed { optionIndex, option ->
+                val radioButton = RadioButton(this).apply {
+                    id = View.generateViewId()
+                    text = option
+                    tag = optionIndex
+                }
+                radioGroup.addView(radioButton)
+            }
+
+            answerGroups.add(radioGroup)
+            questionsContainer.addView(radioGroup)
+        }
+    }
+
+    private fun submitQuiz() {
+        val missingQuestions = answerGroups.mapIndexedNotNull { index, group ->
+            if (group.checkedRadioButtonId == View.NO_ID) index + 1 else null
+        }
+
+        if (missingQuestions.isNotEmpty()) {
+            Toast.makeText(
+                this,
+                "Falta responder: ${missingQuestions.joinToString(", ")}.",
+                Toast.LENGTH_LONG
+            ).show()
+            return
+        }
+
+        val score = answerGroups.mapIndexed { index, group ->
+            val selectedOption = group.findViewById<RadioButton>(group.checkedRadioButtonId).tag as Int
+            if (selectedOption == currentQuestions[index].correctAnswerIndex) 1 else 0
+        }.sum()
+
+        Toast.makeText(
+            this,
+            "Obtuviste $score de ${currentQuestions.size} respuestas correctas.",
+            Toast.LENGTH_LONG
+        ).show()
+    }
+
+    private fun resetQuiz() {
+        answerGroups.forEach { it.clearCheck() }
+        Toast.makeText(this, "Quiz reiniciado.", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun getQuestions(category: String, difficulty: String): List<QuizQuestion> {
+        val hard = difficulty.equals("Difícil", ignoreCase = true)
+
+        return when (category) {
+            "Cultura general" -> if (hard) {
+                listOf(
+                    QuizQuestion("Que pais tiene mas husos horarios oficiales?", listOf("Francia", "Rusia", "Estados Unidos"), 0),
+                    QuizQuestion("En que ciudad se encuentra la sede principal de la ONU?", listOf("Ginebra", "Nueva York", "Paris"), 1),
+                    QuizQuestion("Cual es el idioma con mas hablantes nativos?", listOf("Mandarin", "Ingles", "Hindi"), 0),
+                    QuizQuestion("Que civilizacion construyo Machu Picchu?", listOf("Maya", "Azteca", "Inca"), 2),
+                    QuizQuestion("Quien escribio Cien anos de soledad?", listOf("Gabriel Garcia Marquez", "Mario Vargas Llosa", "Julio Cortazar"), 0)
+                )
+            } else {
+                listOf(
+                    QuizQuestion("Cual es la capital de El Salvador?", listOf("San Salvador", "Santa Ana", "San Miguel"), 0),
+                    QuizQuestion("Cuantos dias tiene una semana?", listOf("Cinco", "Siete", "Diez"), 1),
+                    QuizQuestion("Que planeta es conocido como el planeta rojo?", listOf("Venus", "Marte", "Jupiter"), 1),
+                    QuizQuestion("Que animal es famoso por tener una trompa larga?", listOf("Elefante", "Caballo", "Leon"), 0),
+                    QuizQuestion("Cual es el oceano mas grande?", listOf("Atlantico", "Pacifico", "Indico"), 1)
+                )
+            }
+            "Ciencia" -> if (hard) {
+                listOf(
+                    QuizQuestion("Que particula tiene carga negativa?", listOf("Electron", "Proton", "Neutron"), 0),
+                    QuizQuestion("Cual es la unidad del Sistema Internacional para la fuerza?", listOf("Joule", "Newton", "Watt"), 1),
+                    QuizQuestion("Que molecula almacena la informacion genetica?", listOf("ARN", "ADN", "ATP"), 1),
+                    QuizQuestion("Que organelo produce energia en la celula?", listOf("Ribosoma", "Mitocondria", "Nucleo"), 1),
+                    QuizQuestion("Cual es el simbolo quimico del sodio?", listOf("S", "Na", "So"), 1)
+                )
+            } else {
+                listOf(
+                    QuizQuestion("Que gas respiramos principalmente para vivir?", listOf("Oxigeno", "Helio", "Neon"), 0),
+                    QuizQuestion("Cuantos estados comunes de la materia se estudian basicamente?", listOf("Tres", "Seis", "Diez"), 0),
+                    QuizQuestion("Que estrella ilumina la Tierra?", listOf("La Luna", "El Sol", "Marte"), 1),
+                    QuizQuestion("Que parte del cuerpo bombea sangre?", listOf("Pulmon", "Corazon", "Estomago"), 1),
+                    QuizQuestion("Que instrumento mide la temperatura?", listOf("Termometro", "Regla", "Bascula"), 0)
+                )
+            }
+            "Deportes" -> if (hard) {
+                listOf(
+                    QuizQuestion("En futbol, cuantos jugadores por equipo inician el partido?", listOf("9", "10", "11"), 2),
+                    QuizQuestion("Que pais gano el Mundial de futbol 2014?", listOf("Alemania", "Argentina", "Brasil"), 0),
+                    QuizQuestion("En tenis, como se llama el punto despues de 40 iguales?", listOf("Ventaja", "Set", "Break"), 0),
+                    QuizQuestion("Cuantos aros olimpicos hay?", listOf("Cinco", "Seis", "Siete"), 0),
+                    QuizQuestion("En baloncesto, cuantos puntos vale un tiro libre?", listOf("Uno", "Dos", "Tres"), 0)
+                )
+            } else {
+                listOf(
+                    QuizQuestion("Con que se juega principalmente el futbol?", listOf("Balon", "Raqueta", "Bate"), 0),
+                    QuizQuestion("Que deporte usa una canasta?", listOf("Baloncesto", "Natacion", "Ciclismo"), 0),
+                    QuizQuestion("Que deporte se practica en una piscina?", listOf("Tenis", "Natacion", "Beisbol"), 1),
+                    QuizQuestion("En que deporte se usa una raqueta?", listOf("Tenis", "Futbol", "Boxeo"), 0),
+                    QuizQuestion("Que competencia tiene medallas de oro, plata y bronce?", listOf("Juegos Olimpicos", "Liga local", "Entrenamiento"), 0)
+                )
+            }
+            else -> if (hard) {
+                listOf(
+                    QuizQuestion("En que ano comenzo la Segunda Guerra Mundial?", listOf("1914", "1939", "1945"), 1),
+                    QuizQuestion("Quien fue el primer presidente de Estados Unidos?", listOf("Abraham Lincoln", "George Washington", "Thomas Jefferson"), 1),
+                    QuizQuestion("Que imperio construyo el Coliseo?", listOf("Romano", "Griego", "Persa"), 0),
+                    QuizQuestion("En que ano llego Cristobal Colon a America?", listOf("1492", "1521", "1810"), 0),
+                    QuizQuestion("Que muro cayo en 1989?", listOf("Muro de Berlin", "Muralla China", "Muro de Adriano"), 0)
+                )
+            } else {
+                listOf(
+                    QuizQuestion("Quienes declararon la independencia de Centroamerica en 1821?", listOf("Los paises centroamericanos", "Los romanos", "Los egipcios"), 0),
+                    QuizQuestion("Que objeto se usaba para escribir antes de la computadora?", listOf("Maquina de escribir", "Microfono", "Camara"), 0),
+                    QuizQuestion("Que civilizacion construyo piramides en Egipto?", listOf("Egipcia", "Romana", "Inca"), 0),
+                    QuizQuestion("Que celebran muchos paises en su dia de independencia?", listOf("Su libertad politica", "Un eclipse", "Una receta"), 0),
+                    QuizQuestion("Como se llama el estudio del pasado?", listOf("Historia", "Biologia", "Geometria"), 0)
+                )
+            }
+        }
+    }
+
+    data class QuizQuestion(
+        val text: String,
+        val options: List<String>,
+        val correctAnswerIndex: Int
+    )
 }
