@@ -30,8 +30,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var authActionButton: MaterialButton
     private lateinit var switchModeButton: MaterialButton
     private lateinit var logoutButton: MaterialButton
+    private lateinit var startQuizButton: MaterialButton
     private lateinit var categoryToggleGroup: MaterialButtonToggleGroup
     private lateinit var categorySecondRowToggleGroup: MaterialButtonToggleGroup
+    private lateinit var difficultyToggleGroup: MaterialButtonToggleGroup
     private var isRegisterMode = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,8 +66,10 @@ class MainActivity : AppCompatActivity() {
         authActionButton = findViewById(R.id.authActionButton)
         switchModeButton = findViewById(R.id.switchModeButton)
         logoutButton = findViewById(R.id.logoutButton)
+        startQuizButton = findViewById(R.id.startQuizButton)
         categoryToggleGroup = findViewById(R.id.categoryToggleGroup)
         categorySecondRowToggleGroup = findViewById(R.id.categorySecondRowToggleGroup)
+        difficultyToggleGroup = findViewById(R.id.difficultyToggleGroup)
     }
 
     private fun configureActions() {
@@ -95,6 +99,10 @@ class MainActivity : AppCompatActivity() {
             if (isChecked) {
                 categoryToggleGroup.clearChecked()
             }
+        }
+
+        startQuizButton.setOnClickListener {
+            startSelectedQuiz()
         }
     }
 
@@ -194,5 +202,33 @@ class MainActivity : AppCompatActivity() {
         switchModeButton.isEnabled = !isLoading
         emailEditText.isEnabled = !isLoading
         passwordEditText.isEnabled = !isLoading
+    }
+
+    private fun startSelectedQuiz() {
+        val category = getSelectedCategory()
+        val difficulty = getSelectedDifficulty()
+
+        if (category == null) {
+            Toast.makeText(this, "Selecciona un tipo de quiz.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        Toast.makeText(this, "Quiz de $category en dificultad $difficulty.", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun getSelectedCategory(): String? {
+        return when {
+            categoryToggleGroup.checkedButtonId != View.NO_ID -> {
+                findViewById<MaterialButton>(categoryToggleGroup.checkedButtonId).text.toString()
+            }
+            categorySecondRowToggleGroup.checkedButtonId != View.NO_ID -> {
+                findViewById<MaterialButton>(categorySecondRowToggleGroup.checkedButtonId).text.toString()
+            }
+            else -> null
+        }
+    }
+
+    private fun getSelectedDifficulty(): String {
+        return findViewById<MaterialButton>(difficultyToggleGroup.checkedButtonId).text.toString()
     }
 }

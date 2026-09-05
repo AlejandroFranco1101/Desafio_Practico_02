@@ -161,6 +161,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                app:selectionRequired="false"
                 app:singleSelection="true">
 
                 <com.google.android.material.button.MaterialButton
@@ -215,6 +216,13 @@
                     android:text="@string/difficulty_hard" />
 
             </com.google.android.material.button.MaterialButtonToggleGroup>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/startQuizButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/start_quiz_button" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/logoutButton"
