@@ -41,10 +41,18 @@ class MainActivity : AppCompatActivity() {
     private lateinit var questionsContainer: LinearLayout
     private lateinit var submitQuizButton: MaterialButton
     private lateinit var resetQuizButton: MaterialButton
+    private lateinit var resultsContainer: LinearLayout
+    private lateinit var resultsScoreText: TextView
+    private lateinit var resultsCategoryText: TextView
+    private lateinit var resultsFeedbackText: TextView
+    private lateinit var reviewContainer: LinearLayout
+    private lateinit var retryQuizButton: MaterialButton
+    private lateinit var backToWelcomeButton: MaterialButton
     private var isRegisterMode = false
     private var selectedCategory = ""
     private var selectedDifficulty = ""
     private var currentQuestions = emptyList<QuizQuestion>()
+    private var selectedAnswers = emptyList<Int>()
     private val answerGroups = mutableListOf<RadioGroup>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -86,6 +94,13 @@ class MainActivity : AppCompatActivity() {
         questionsContainer = findViewById(R.id.questionsContainer)
         submitQuizButton = findViewById(R.id.submitQuizButton)
         resetQuizButton = findViewById(R.id.resetQuizButton)
+        resultsContainer = findViewById(R.id.resultsContainer)
+        resultsScoreText = findViewById(R.id.resultsScoreText)
+        resultsCategoryText = findViewById(R.id.resultsCategoryText)
+        resultsFeedbackText = findViewById(R.id.resultsFeedbackText)
+        reviewContainer = findViewById(R.id.reviewContainer)
+        retryQuizButton = findViewById(R.id.retryQuizButton)
+        backToWelcomeButton = findViewById(R.id.backToWelcomeButton)
     }
 
     private fun configureActions() {
@@ -127,6 +142,14 @@ class MainActivity : AppCompatActivity() {
 
         resetQuizButton.setOnClickListener {
             resetQuiz()
+        }
+
+        retryQuizButton.setOnClickListener {
+            showQuiz()
+        }
+
+        backToWelcomeButton.setOnClickListener {
+            showWelcome()
         }
     }
 
@@ -209,11 +232,13 @@ class MainActivity : AppCompatActivity() {
             authContainer.visibility = View.VISIBLE
             sessionContainer.visibility = View.GONE
             quizContainer.visibility = View.GONE
+            resultsContainer.visibility = View.GONE
             updateAuthMode()
         } else {
             authContainer.visibility = View.GONE
             sessionContainer.visibility = View.VISIBLE
             quizContainer.visibility = View.GONE
+            resultsContainer.visibility = View.GONE
             sessionEmailText.text = currentUser.email ?: "Usuario autenticado"
         }
     }
@@ -264,8 +289,15 @@ class MainActivity : AppCompatActivity() {
     private fun showQuiz() {
         sessionContainer.visibility = View.GONE
         quizContainer.visibility = View.VISIBLE
+        resultsContainer.visibility = View.GONE
         quizTitleText.text = "$selectedCategory - $selectedDifficulty"
         renderQuestions()
+    }
+
+    private fun showWelcome() {
+        quizContainer.visibility = View.GONE
+        resultsContainer.visibility = View.GONE
+        sessionContainer.visibility = View.VISIBLE
     }
 
     private fun renderQuestions() {
@@ -312,21 +344,60 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        val score = answerGroups.mapIndexed { index, group ->
-            val selectedOption = group.findViewById<RadioButton>(group.checkedRadioButtonId).tag as Int
+        selectedAnswers = answerGroups.map { group ->
+            group.findViewById<RadioButton>(group.checkedRadioButtonId).tag as Int
+        }
+
+        val score = selectedAnswers.mapIndexed { index, selectedOption ->
             if (selectedOption == currentQuestions[index].correctAnswerIndex) 1 else 0
         }.sum()
 
-        Toast.makeText(
-            this,
-            "Obtuviste $score de ${currentQuestions.size} respuestas correctas.",
-            Toast.LENGTH_LONG
-        ).show()
+        showResults(score)
     }
 
     private fun resetQuiz() {
         answerGroups.forEach { it.clearCheck() }
         Toast.makeText(this, "Quiz reiniciado.", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun showResults(score: Int) {
+        quizContainer.visibility = View.GONE
+        sessionContainer.visibility = View.GONE
+        resultsContainer.visibility = View.VISIBLE
+
+        resultsScoreText.text = "Obtuviste $score de ${currentQuestions.size} respuestas correctas."
+        resultsCategoryText.text = "Tipo de quiz: $selectedCategory ($selectedDifficulty)"
+        resultsFeedbackText.text = getFeedbackMessage(score)
+        renderReview()
+    }
+
+    private fun getFeedbackMessage(score: Int): String {
+        return when {
+            score <= 1 -> "Mejor me dedico a otra cosa."
+            score in 2..3 -> "Mas o menos OK."
+            score == 4 -> "Me merezco un churro."
+            score == 5 && selectedDifficulty.equals("Difícil", ignoreCase = true) -> "Como pegarle a un bolo."
+            else -> "Excelente resultado."
+        }
+    }
+
+    private fun renderReview() {
+        reviewContainer.removeAllViews()
+
+        currentQuestions.forEachIndexed { index, question ->
+            val chosenAnswer = question.options[selectedAnswers[index]]
+            val correctAnswer = question.options[question.correctAnswerIndex]
+            val isCorrect = selectedAnswers[index] == question.correctAnswerIndex
+            val status = if (isCorrect) "Correcta" else "Incorrecta"
+
+            val reviewText = TextView(this).apply {
+                text = "${index + 1}. ${question.text}\nTu respuesta: $chosenAnswer\nRespuesta correcta: $correctAnswer\n$status"
+                setPadding(0, 14, 0, 14)
+                setTextAppearance(android.R.style.TextAppearance_Material_Medium)
+            }
+
+            reviewContainer.addView(reviewText)
+        }
     }
 
     private fun getQuestions(category: String, difficulty: String): List<QuizQuestion> {

@@ -24,5 +24,9 @@
     <string name="quiz_answer_all">Responde todas las preguntas antes de enviar el quiz.</string>
     <string name="submit_quiz_button">Enviar quiz</string>
     <string name="reset_quiz_button">Reiniciar quiz</string>
+    <string name="results_title">Resultados</string>
+    <string name="review_title">Revision de respuestas</string>
+    <string name="retry_quiz_button">Volver a intentar</string>
+    <string name="back_to_welcome_button">Elegir otro quiz</string>
     <string name="logout_button">Cerrar sesion</string>
 </resources>
