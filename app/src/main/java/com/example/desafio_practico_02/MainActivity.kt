@@ -40,6 +40,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var questionsContainer: LinearLayout
     private lateinit var submitQuizButton: MaterialButton
     private lateinit var resetQuizButton: MaterialButton
+    private lateinit var quizBackToWelcomeButton: MaterialButton
     private lateinit var resultsContainer: LinearLayout
     private lateinit var resultsScoreText: TextView
     private lateinit var resultsCategoryText: TextView
@@ -92,6 +93,7 @@ class MainActivity : AppCompatActivity() {
         questionsContainer = findViewById(R.id.questionsContainer)
         submitQuizButton = findViewById(R.id.submitQuizButton)
         resetQuizButton = findViewById(R.id.resetQuizButton)
+        quizBackToWelcomeButton = findViewById(R.id.quizBackToWelcomeButton)
         resultsContainer = findViewById(R.id.resultsContainer)
         resultsScoreText = findViewById(R.id.resultsScoreText)
         resultsCategoryText = findViewById(R.id.resultsCategoryText)
@@ -128,6 +130,10 @@ class MainActivity : AppCompatActivity() {
 
         resetQuizButton.setOnClickListener {
             resetQuiz()
+        }
+
+        quizBackToWelcomeButton.setOnClickListener {
+            showWelcome()
         }
 
         retryQuizButton.setOnClickListener {

@@ -27,6 +27,7 @@
     <string name="results_title">Resultados</string>
     <string name="review_title">Revision de respuestas</string>
     <string name="retry_quiz_button">Volver a intentar</string>
+    <string name="quiz_back_to_welcome_button">Regresar a pantalla de bienvenida</string>
     <string name="back_to_welcome_button">Elegir otro quiz</string>
     <string name="logout_button">Cerrar sesion</string>
 </resources>

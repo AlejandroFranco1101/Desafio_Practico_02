@@ -262,6 +262,14 @@
                 android:text="@string/submit_quiz_button" />
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/quizBackToWelcomeButton"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/quiz_back_to_welcome_button" />
+
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/resetQuizButton"
                 style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="match_parent"
