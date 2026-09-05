@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1065229319413",
+    "project_id": "desafio-practico-02-731a2",
+    "storage_bucket": "desafio-practico-02-731a2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1065229319413:android:26808ae086a0f0a54f59bc",
+        "android_client_info": {
+          "package_name": "com.example.desafio_practico_02"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8u7G3j_DI-BURdcA2We_pLECTpyGM92I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
