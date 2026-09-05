@@ -275,6 +275,8 @@ class MainActivity : AppCompatActivity() {
         sessionContainer.visibility = View.GONE
         quizContainer.visibility = View.VISIBLE
         resultsContainer.visibility = View.GONE
+        quizBackToWelcomeButton.visibility = View.VISIBLE
+        quizBackToWelcomeButton.isEnabled = true
         quizTitleText.text = "$selectedCategory - $selectedDifficulty"
         renderQuestions()
     }
