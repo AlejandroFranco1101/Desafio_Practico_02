@@ -10,4 +10,6 @@
     <color name="blue_on_secondary">#FFFFFFFF</color>
     <color name="blue_secondary_container">#C8E6FF</color>
     <color name="blue_on_secondary_container">#001F2A</color>
+    <color name="blue_surface">#F8FAFF</color>
+    <color name="blue_on_surface">#1A1C20</color>
 </resources>

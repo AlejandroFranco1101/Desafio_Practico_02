@@ -60,11 +60,23 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+        val mainContent = findViewById<View>(R.id.main)
+        val initialLeftPadding = mainContent.paddingLeft
+        val initialTopPadding = mainContent.paddingTop
+        val initialRightPadding = mainContent.paddingRight
+        val initialBottomPadding = mainContent.paddingBottom
+
+        ViewCompat.setOnApplyWindowInsetsListener(mainContent) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            v.setPadding(
+                initialLeftPadding + systemBars.left,
+                initialTopPadding + systemBars.top,
+                initialRightPadding + systemBars.right,
+                initialBottomPadding + systemBars.bottom
+            )
             insets
         }
+        ViewCompat.requestApplyInsets(mainContent)
 
         auth = FirebaseAuth.getInstance()
         bindViews()

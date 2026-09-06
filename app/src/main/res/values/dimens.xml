@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Espaciado que permite que el contenido conserve ancho útil en celulares pequeños. -->
+    <dimen name="screen_horizontal_padding">24dp</dimen>
+    <dimen name="screen_vertical_padding">20dp</dimen>
+</resources>

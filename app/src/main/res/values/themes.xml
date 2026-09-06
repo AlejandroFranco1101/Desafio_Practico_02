@@ -9,6 +9,9 @@
         <item name="colorOnSecondary">@color/blue_on_secondary</item>
         <item name="colorSecondaryContainer">@color/blue_secondary_container</item>
         <item name="colorOnSecondaryContainer">@color/blue_on_secondary_container</item>
+        <item name="colorSurface">@color/blue_surface</item>
+        <item name="colorOnSurface">@color/blue_on_surface</item>
+        <item name="android:windowBackground">@color/blue_surface</item>
         <item name="android:colorAccent">@color/blue_primary</item>
     </style>
 
