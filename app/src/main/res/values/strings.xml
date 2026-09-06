@@ -1,11 +1,11 @@
 <resources>
     <string name="app_name">Quiz DSM</string>
     <string name="login_title">Iniciar sesion</string>
-    <string name="login_subtitle">Ingresa con tu correo y contrasena para continuar al quiz.</string>
+    <string name="login_subtitle">Ingresa con tu correo y contraseña para continuar al quiz.</string>
     <string name="register_title">Crear cuenta</string>
     <string name="register_subtitle">Registra un usuario nuevo con Firebase Authentication.</string>
     <string name="email_hint">Correo electronico</string>
-    <string name="password_hint">Contrasena</string>
+    <string name="password_hint">Password</string>
     <string name="login_button">Iniciar sesion</string>
     <string name="register_button">Registrarme</string>
     <string name="go_to_register">No tengo cuenta, registrarme</string>
